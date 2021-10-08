@@ -6,8 +6,8 @@ import json
 
 def load_data(datafile:str, headerfile:str) -> pd.DataFrame:
     dirname = osp.dirname(__file__)
-    data_path = osp.join(dirname, '..', 'data', datafile)
-    header_path = osp.join(dirname, '..', 'data', headerfile)
+    data_path = osp.join(dirname, datafile)
+    header_path = osp.join(dirname, headerfile)
     header = [line.rstrip() for line in open(header_path)]
     return pd.read_csv(data_path, usecols=['Created Date', 'Closed Date', 'Incident Zip'], names=header)#, nrows=1_000)
 
@@ -48,4 +48,4 @@ def write_json_output(df:pd.DataFrame, out:str):
 
 if __name__ == '__main__':
     df = clean_data(load_data('nyc_311_limit_2020.csv', 'header.txt'))
-    write_json_output(df, 'zipcodes.json')
+    #write_json_output(df, 'zipcodes.json')

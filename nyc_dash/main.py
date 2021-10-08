@@ -1,3 +1,4 @@
+import os.path as osp
 import pandas as pd
 import json
 from bokeh.layouts import column, row
@@ -5,7 +6,9 @@ from bokeh.models import Div, Dropdown, ColumnDataSource
 from bokeh.plotting import figure, curdoc
 
 # Load zipcode data
-zipcodes = json.load(open('test.json',))
+dirname = osp.dirname(__file__)
+data_path = osp.join(dirname, 'zipcodes.json')
+zipcodes = json.load(open(data_path,))
 zipcodes_menu = list(zipcodes.keys())
 
 # Constants
@@ -46,8 +49,14 @@ def update_zipcode1(event):
 def update_zipcode2(event):
         source.data['z2'] = zipcodes[event.item]
         text_z2.text = "Zipcode 2: " + event.item
+        
 
 dropdown_z1.on_click(update_zipcode1)
 dropdown_z2.on_click(update_zipcode2)
 
-curdoc().add_root(column(dropdown_z1, text_z1, dropdown_z2, text_z2, p))
+url = curdoc().session_context.request.arguments
+if (len(url) == 2 and 'username' in url.keys() and 'password' in url.keys() and 
+        url['username'][0].decode('utf-8') == 'nyc' and url['password'][0].decode('utf-8') == 'iheartnyc'):
+        curdoc().add_root(column(dropdown_z1, text_z1, dropdown_z2, text_z2, p))
+else:
+        curdoc()
