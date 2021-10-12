@@ -10,7 +10,7 @@ def load_data(datafile:str, headerfile:str) -> pd.DataFrame:
     header_path = osp.join(dirname, headerfile)
     header = [line.rstrip() for line in open(header_path)]
     return pd.read_csv(data_path, usecols=['Created Date', 'Closed Date', 'Incident Zip'], names=header,
-                        dtype={'Incident Zip':'str'}, parse_dates=['Created Date', 'Closed Date'], nrows=100)
+                        dtype={'Incident Zip':'str'}, parse_dates=['Created Date', 'Closed Date'])
 
 def clean_data(df:pd.DataFrame) -> pd.DataFrame:
     # Drop NAs (zipcodes, closed dates)
@@ -26,7 +26,7 @@ def monthly_avg_incident_time(df:pd.DataFrame, month_num:int, zip:str=None) -> f
     if df.shape[0] == 0: # if no incidents resolved in a month, set avg resolve time to 0
         return 0
     diff = df[['Created Date', 'Closed Date']].apply(lambda x : pd.Timedelta(x[1] - x[0]), axis=1)
-    return float(mean(diff).seconds/3600)
+    return float(mean(diff)/pd.Timedelta(hours=1))
 
 def monthly_avg_incident_times(df:pd.DataFrame, zip:str=None):
     return [monthly_avg_incident_time(df, m, zip) for m in range(1, 13)]
@@ -46,14 +46,4 @@ def write_json_output(df:pd.DataFrame, out:str):
 
 if __name__ == '__main__':
     df = clean_data(load_data('nyc_311_limit_trimmed.csv', 'header.txt'))
-    #write_json_output(df, osp.join(dirname, 'zipcodes.json'))
-    diff = df[['Created Date', 'Closed Date']].apply(lambda x : pd.Timedelta(x[1] - x[0]), axis=1)
-    s = 0
-    for d in diff:
-        print(d)
-        s = s + d.seconds
-    #print(diff.shape[0])
-    print(s)
-    print(s/diff.shape[0])
-    print(mean(diff).seconds)
-    
+    write_json_output(df, osp.join(dirname, 'zipcodes.json'))
