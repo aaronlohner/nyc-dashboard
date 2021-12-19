@@ -1,6 +1,6 @@
 # NYC Dashboard
 
-A Bokeh dashboard that shows the difference in response time to complaints filed through the 311 service in New York City by zipcode for the year 2020. Created for the purpose of an assignment for the course *COMP 598 - Topics in Computer Science (Data Science)*, taught by Professor Derek Ruths, 2021.
+A Bokeh dashboard that shows the difference in response time to complaints filed through the 311 service in New York City by zip code for the year 2020.
 
 ## Usage
 Compare differing response times by zipcode using the dropdown menus on the [dashboard website](http://35.183.203.111:8080/nyc_dash?username=nyc&password=iheartnyc).
